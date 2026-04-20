@@ -55,6 +55,7 @@ function remove(id: number | string) {
   if (editingId.value === id) cancelEdit()
   store.removeTodo(id)
 }
+
 </script>
 
 <template>
