@@ -10,7 +10,7 @@ import {
   type ResourceId,
 } from './types'
 
-export interface ResourceStoreOptions<
+interface ResourceStoreOptions<
   T extends { id: ResourceId },
   C,
   U,

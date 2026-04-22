@@ -6,7 +6,7 @@ export type Todo = {
   is_completed: boolean
 }
 
-export type TodoCreate = Pick<Todo, 'text' | 'is_completed'>
+export type TodoCreate = Omit<Todo, 'id'>
 export type TodoUpdate = Partial<TodoCreate>
 
 /**
