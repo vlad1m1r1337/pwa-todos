@@ -1,1 +1,1 @@
-export { default as ErrorBanner } from './ui/ErrorBanner.vue'
+export { default as ErrorBanner } from './ui/ErrorBanner.vue';

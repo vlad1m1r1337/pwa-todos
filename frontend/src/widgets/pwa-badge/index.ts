@@ -1,1 +1,1 @@
-export { default as PWABadge } from './ui/PWABadge.vue'
+export { default as PWABadge } from './ui/PWABadge.vue';

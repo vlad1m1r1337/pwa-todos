@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { AppHeader } from '@/widgets/app-header'
-import { ErrorBanner } from '@/widgets/error-banner'
-import { TodoList } from '@/widgets/todo-list'
-import { PWABadge } from '@/widgets/pwa-badge'
-import { CreateTodoForm } from '@/features/create-todo'
+import { AppHeader } from '@/widgets/app-header';
+import { ErrorBanner } from '@/widgets/error-banner';
+import { TodoList } from '@/widgets/todo-list';
+import { PWABadge } from '@/widgets/pwa-badge';
+import { CreateTodoForm } from '@/features/create-todo';
 </script>
 
 <template>

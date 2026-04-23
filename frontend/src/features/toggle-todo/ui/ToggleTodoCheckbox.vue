@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useTodosStore, type LocalTodo } from '@/entities/todo'
+import { useTodosStore, type LocalTodo } from '@/entities/todo';
 
-const props = defineProps<{ todo: LocalTodo }>()
-const store = useTodosStore()
+const props = defineProps<{ todo: LocalTodo }>();
+const store = useTodosStore();
 
 function onChange(e: Event) {
-  const value = (e.target as HTMLInputElement).checked
-  store.updateItem(props.todo.id, { is_completed: value })
+  const value = (e.target as HTMLInputElement).checked;
+  store.updateItem(props.todo.id, { is_completed: value });
 }
 </script>
 

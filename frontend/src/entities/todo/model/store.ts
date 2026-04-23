@@ -1,6 +1,6 @@
-import { defineResourceStore } from '@/shared/lib/offline'
-import { todosApi } from '../api/todos.api'
-import type { LocalTodo, TodoCreate, TodoUpdate } from './types'
+import { defineResourceStore } from '@/shared/lib/offline';
+import { todosApi } from '../api/todos.api';
+import type { LocalTodo, TodoCreate, TodoUpdate } from './types';
 
 /**
  * Стор todos — тонкая обёртка над фабрикой ресурса. Отвечает только за
@@ -15,4 +15,4 @@ export const useTodosStore = defineResourceStore<
   name: 'todos',
   api: todosApi,
   makeOptimistic: (payload, tempId) => ({ id: tempId, ...payload }),
-})
+});

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 
 export const api = axios.create({
   baseURL: '/api',
@@ -7,4 +7,4 @@ export const api = axios.create({
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
-})
+});

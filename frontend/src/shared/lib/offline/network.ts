@@ -1,8 +1,8 @@
-import axios from 'axios'
+import axios from 'axios';
 
 /** Отсутствие ответа от сервера трактуем как "нет сети / сервер недоступен". */
 export function isNetworkError(e: unknown): boolean {
-  return axios.isAxiosError(e) && !e.response
+  return axios.isAxiosError(e) && !e.response;
 }
 
 export function formatError(
@@ -10,8 +10,8 @@ export function formatError(
   fallback = 'Не удалось выполнить запрос',
 ): string {
   if (axios.isAxiosError(e) && e.response) {
-    return `Ошибка ${e.response.status}: ${e.response.statusText}`
+    return `Ошибка ${e.response.status}: ${e.response.statusText}`;
   }
-  if (e instanceof Error) return e.message
-  return fallback
+  if (e instanceof Error) return e.message;
+  return fallback;
 }

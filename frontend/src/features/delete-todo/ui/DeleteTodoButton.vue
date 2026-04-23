@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useTodosStore } from '@/entities/todo'
+import { useTodosStore } from '@/entities/todo';
 
-const props = defineProps<{ id: number | string }>()
-const store = useTodosStore()
+const props = defineProps<{ id: number | string }>();
+const store = useTodosStore();
 
 function onClick() {
-  store.removeItem(props.id)
+  store.removeItem(props.id);
 }
 </script>
 
