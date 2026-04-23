@@ -141,9 +141,7 @@ export const useSyncQueueStore = defineStore(
     }
 
     async function refetchAll(): Promise<void> {
-      await Promise.all(
-        Array.from(adapters.values()).map((a) => a.refetch?.()),
-      )
+      await Promise.all(Array.from(adapters.values()).map((a) => a.refetch?.()))
     }
 
     /**

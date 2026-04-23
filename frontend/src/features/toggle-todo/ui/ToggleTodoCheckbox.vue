@@ -32,7 +32,9 @@ function onChange(e: Event) {
   border: 1px solid var(--border);
   background: var(--surface);
   accent-color: var(--accent);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .checkbox:hover {

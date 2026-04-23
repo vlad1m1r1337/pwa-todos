@@ -15,19 +15,17 @@ function registerPeriodicSync(swUrl: string, r: ServiceWorkerRegistration) {
   if (period <= 0) return
 
   setInterval(async () => {
-    if ('onLine' in navigator && !navigator.onLine)
-      return
+    if ('onLine' in navigator && !navigator.onLine) return
 
     const resp = await fetch(swUrl, {
       cache: 'no-store',
       headers: {
-        'cache': 'no-store',
+        cache: 'no-store',
         'cache-control': 'no-cache',
       },
     })
 
-    if (resp?.status === 200)
-      await r.update()
+    if (resp?.status === 200) await r.update()
   }, period)
 }
 
@@ -38,13 +36,11 @@ const { needRefresh, updateServiceWorker } = useRegisterSW({
     if (r?.active?.state === 'activated') {
       swActivated.value = true
       registerPeriodicSync(swUrl, r)
-    }
-    else if (r?.installing) {
+    } else if (r?.installing) {
       r.installing.addEventListener('statechange', (e) => {
         const sw = e.target as ServiceWorker
         swActivated.value = sw.state === 'activated'
-        if (swActivated.value)
-          registerPeriodicSync(swUrl, r)
+        if (swActivated.value) registerPeriodicSync(swUrl, r)
       })
     }
   },
@@ -63,10 +59,10 @@ function close() {
 
 <template>
   <div
-      v-if="needRefresh"
-      class="pwa-toast"
-      aria-labelledby="toast-message"
-      role="alert"
+    v-if="needRefresh"
+    class="pwa-toast"
+    aria-labelledby="toast-message"
+    role="alert"
   >
     <div class="message">
       <span id="toast-message">
@@ -74,12 +70,10 @@ function close() {
       </span>
     </div>
     <div class="buttons">
-      <button  type="button" class="reload" @click="updateServiceWorker()">
+      <button type="button" class="reload" @click="updateServiceWorker()">
         Reload
       </button>
-      <button type="button" @click="close">
-        Close
-      </button>
+      <button type="button" @click="close">Close</button>
     </div>
   </div>
 </template>

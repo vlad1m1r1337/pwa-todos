@@ -31,7 +31,9 @@ function stopEdit() {
         <TodoCard :todo="todo" />
         <ToggleTodoCheckbox :todo="todo" />
         <div class="actions">
-          <button type="button" class="btn" @click="startEdit(todo.id)">Изменить</button>
+          <button type="button" class="btn" @click="startEdit(todo.id)">
+            Изменить
+          </button>
           <DeleteTodoButton :id="todo.id" />
         </div>
       </template>

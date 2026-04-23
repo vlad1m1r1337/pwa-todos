@@ -24,7 +24,9 @@ function onAdd() {
       placeholder="Новое дело…"
       aria-label="Текст новой задачи"
     />
-    <button type="submit" class="btn primary" :disabled="!canAdd">Добавить</button>
+    <button type="submit" class="btn primary" :disabled="!canAdd">
+      Добавить
+    </button>
   </form>
 </template>
 

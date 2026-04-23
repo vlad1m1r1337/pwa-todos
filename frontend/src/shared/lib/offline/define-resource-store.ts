@@ -10,11 +10,7 @@ import {
   type ResourceId,
 } from './types'
 
-interface ResourceStoreOptions<
-  T extends { id: ResourceId },
-  C,
-  U,
-> {
+interface ResourceStoreOptions<T extends { id: ResourceId }, C, U> {
   /** Имя стора и ключа в реестре/persist. Должно быть уникальным. */
   name: string
   api: ResourceApi<T, C, U>
@@ -44,11 +40,9 @@ interface ResourceStoreOptions<
  * })
  * ```
  */
-export function defineResourceStore<
-  T extends { id: ResourceId },
-  C,
-  U,
->(options: ResourceStoreOptions<T, C, U>) {
+export function defineResourceStore<T extends { id: ResourceId }, C, U>(
+  options: ResourceStoreOptions<T, C, U>,
+) {
   const { name, api, makeOptimistic } = options
 
   const useStore = defineStore(

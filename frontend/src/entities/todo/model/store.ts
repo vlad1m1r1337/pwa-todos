@@ -7,7 +7,11 @@ import type { LocalTodo, TodoCreate, TodoUpdate } from './types'
  * локальные элементы и их маппинг в оптимистичные записи. Всю логику
  * offline/online синхронизации предоставляет `shared/lib/offline`.
  */
-export const useTodosStore = defineResourceStore<LocalTodo, TodoCreate, TodoUpdate>({
+export const useTodosStore = defineResourceStore<
+  LocalTodo,
+  TodoCreate,
+  TodoUpdate
+>({
   name: 'todos',
   api: todosApi,
   makeOptimistic: (payload, tempId) => ({ id: tempId, ...payload }),

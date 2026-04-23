@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import App from '@/app/App.vue'
+import App from './App.vue'
 import { createAppPinia } from '@/app/providers/pinia'
 import '@/app/styles/index.css'
 import { preloadPersistedState } from '@/shared/lib/storage'
