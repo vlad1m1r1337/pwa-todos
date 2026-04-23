@@ -1,4 +1,4 @@
-import localforage from 'localforage'
+import localforage from 'localforage';
 
 // Отдельный инстанс IndexedDB для состояния Pinia.
 // Не пересекается с Cache Storage, который Workbox использует
@@ -7,7 +7,7 @@ const idb = localforage.createInstance({
   name: 'pwa-test',
   storeName: 'pinia',
   description: 'Pinia persisted state (IndexedDB)',
-})
+});
 
 /**
  * Список ключей, которые мы предзагружаем из IDB на старте приложения.
@@ -16,9 +16,9 @@ const idb = localforage.createInstance({
  * При добавлении нового ресурса через `defineResourceStore` достаточно
  * дописать сюда его `name` и ключ очереди синхронизации оставить как есть.
  */
-export const PERSISTED_KEYS = ['sync-queue', 'todos'] as const
+export const PERSISTED_KEYS = ['sync-queue', 'todos'] as const;
 
-const cache = new Map<string, string | null>()
+const cache = new Map<string, string | null>();
 
 /**
  * Заранее читает все persisted-ключи из IDB в синхронный кэш.
@@ -28,10 +28,10 @@ const cache = new Map<string, string | null>()
 export async function preloadPersistedState() {
   await Promise.all(
     PERSISTED_KEYS.map(async (key) => {
-      const raw = await idb.getItem<string>(key)
-      cache.set(key, raw ?? null)
+      const raw = await idb.getItem<string>(key);
+      cache.set(key, raw ?? null);
     }),
-  )
+  );
 }
 
 /**
@@ -42,11 +42,11 @@ export async function preloadPersistedState() {
 export const idbStorage = {
   getItem: (key: string): string | null => cache.get(key) ?? null,
   setItem: (key: string, value: string): void => {
-    cache.set(key, value)
-    void idb.setItem(key, value)
+    cache.set(key, value);
+    void idb.setItem(key, value);
   },
   removeItem: (key: string): void => {
-    cache.delete(key)
-    void idb.removeItem(key)
+    cache.delete(key);
+    void idb.removeItem(key);
   },
-}
+};

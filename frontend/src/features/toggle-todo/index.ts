@@ -1,1 +1,1 @@
-export { default as ToggleTodoCheckbox } from './ui/ToggleTodoCheckbox.vue'
+export { default as ToggleTodoCheckbox } from './ui/ToggleTodoCheckbox.vue';

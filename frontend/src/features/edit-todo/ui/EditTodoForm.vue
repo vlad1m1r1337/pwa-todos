@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useTodosStore, type LocalTodo } from '@/entities/todo'
+import { ref } from 'vue';
+import { useTodosStore, type LocalTodo } from '@/entities/todo';
 
-const props = defineProps<{ todo: LocalTodo }>()
-const emit = defineEmits<{ done: [] }>()
+const props = defineProps<{ todo: LocalTodo }>();
+const emit = defineEmits<{ done: [] }>();
 
-const store = useTodosStore()
-const text = ref(props.todo.text)
+const store = useTodosStore();
+const text = ref(props.todo.text);
 
 function save() {
-  const trimmed = text.value.trim()
-  if (!trimmed) return
-  store.updateItem(props.todo.id, { text: trimmed })
-  emit('done')
+  const trimmed = text.value.trim();
+  if (!trimmed) return;
+  store.updateItem(props.todo.id, { text: trimmed });
+  emit('done');
 }
 
 function cancel() {
-  emit('done')
+  emit('done');
 }
 
 function onKeydown(e: KeyboardEvent) {
   if (e.key === 'Enter') {
-    e.preventDefault()
-    save()
+    e.preventDefault();
+    save();
   }
-  if (e.key === 'Escape') cancel()
+  if (e.key === 'Escape') cancel();
 }
 </script>
 

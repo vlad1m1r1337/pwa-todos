@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useTodosStore } from '@/entities/todo'
+import { ref, computed } from 'vue';
+import { useTodosStore } from '@/entities/todo';
 
-const store = useTodosStore()
-const draft = ref('')
-const canAdd = computed(() => draft.value.trim().length > 0)
+const store = useTodosStore();
+const draft = ref('');
+const canAdd = computed(() => draft.value.trim().length > 0);
 
 function onAdd() {
-  const text = draft.value.trim()
-  if (!text) return
-  draft.value = ''
-  store.addItem({ text, is_completed: false })
+  const text = draft.value.trim();
+  if (!text) return;
+  draft.value = '';
+  store.addItem({ text, is_completed: false });
 }
 </script>
 

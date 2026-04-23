@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { useSyncQueueStore } from '@/shared/lib/offline'
+import { storeToRefs } from 'pinia';
+import { useSyncQueueStore } from '@/shared/lib/offline';
 
-const sync = useSyncQueueStore()
-const { isOnline, pendingCount } = storeToRefs(sync)
+const sync = useSyncQueueStore();
+const { isOnline, pendingCount } = storeToRefs(sync);
 </script>
 
 <template>

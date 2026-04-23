@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useTodosStore, TodoCard } from '@/entities/todo'
-import { ToggleTodoCheckbox } from '@/features/toggle-todo'
-import { DeleteTodoButton } from '@/features/delete-todo'
-import { EditTodoForm } from '@/features/edit-todo'
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useTodosStore, TodoCard } from '@/entities/todo';
+import { ToggleTodoCheckbox } from '@/features/toggle-todo';
+import { DeleteTodoButton } from '@/features/delete-todo';
+import { EditTodoForm } from '@/features/edit-todo';
 
-const store = useTodosStore()
-const { items, loading } = storeToRefs(store)
+const store = useTodosStore();
+const { items, loading } = storeToRefs(store);
 
-const editingId = ref<number | string | null>(null)
+const editingId = ref<number | string | null>(null);
 
 function startEdit(id: number | string) {
-  editingId.value = id
+  editingId.value = id;
 }
 
 function stopEdit() {
-  editingId.value = null
+  editingId.value = null;
 }
 </script>
 

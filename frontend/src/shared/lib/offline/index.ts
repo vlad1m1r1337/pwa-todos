@@ -1,6 +1,6 @@
-export { defineResourceStore } from './define-resource-store'
-export { useSyncQueueStore, registerResource } from './sync-queue'
-export { isNetworkError, formatError } from './network'
+export { defineResourceStore } from './define-resource-store';
+export { useSyncQueueStore, registerResource } from './sync-queue';
+export { isNetworkError, formatError } from './network';
 export {
   isTempId,
   makeTempId,
@@ -9,4 +9,4 @@ export {
   type ResourceAdapter,
   type PendingOp,
   type SyncEvent,
-} from './types'
+} from './types';

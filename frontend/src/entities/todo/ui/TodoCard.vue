@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { LocalTodo } from '../model/types'
+import type { LocalTodo } from '../model/types';
 
-defineProps<{ todo: LocalTodo }>()
+defineProps<{ todo: LocalTodo }>();
 </script>
 
 <template>

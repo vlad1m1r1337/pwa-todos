@@ -1,6 +1,6 @@
-import { api } from '@/shared/api'
-import type { ResourceApi, ResourceId } from '@/shared/lib/offline'
-import type { Todo, TodoCreate, TodoUpdate } from '../model/types'
+import { api } from '@/shared/api';
+import type { ResourceApi, ResourceId } from '@/shared/lib/offline';
+import type { Todo, TodoCreate, TodoUpdate } from '../model/types';
 
 export const todosApi: ResourceApi<Todo, TodoCreate, TodoUpdate> = {
   list: () => api.get<Todo[]>('/todos/').then((r) => r.data),
@@ -8,4 +8,4 @@ export const todosApi: ResourceApi<Todo, TodoCreate, TodoUpdate> = {
   update: (id: ResourceId, payload) =>
     api.patch<Todo>(`/todos/${id}/`, payload).then((r) => r.data),
   remove: (id: ResourceId) => api.delete(`/todos/${id}/`).then(() => undefined),
-}
+};
