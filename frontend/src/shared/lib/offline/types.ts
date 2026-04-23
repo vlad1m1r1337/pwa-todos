@@ -49,7 +49,7 @@ export interface ResourceApi<T, C, U> {
 }
 
 /**
- * Адаптер ресурса для sync-queue. Создаётся фабрикой `defineResourceStore`
+ * Адаптер ресурса для sync-queue. Создаётся фабрикой `createResourceStore`
  * и автоматически регистрируется в реестре при импорте стора.
  */
 export interface ResourceAdapter<T = unknown, C = unknown, U = unknown> {
@@ -59,8 +59,3 @@ export interface ResourceAdapter<T = unknown, C = unknown, U = unknown> {
   onRollback?: (op: PendingOp) => void;
   refetch?: () => Promise<void>;
 }
-
-export const isTempId = (id: ResourceId): id is string =>
-  typeof id === 'string' && id.startsWith('tmp-');
-
-export const makeTempId = (): string => `tmp-${crypto.randomUUID()}`;

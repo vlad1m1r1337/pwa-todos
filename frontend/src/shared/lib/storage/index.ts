@@ -3,36 +3,25 @@ import localforage from 'localforage';
 // Отдельный инстанс IndexedDB для состояния Pinia.
 // Не пересекается с Cache Storage, который Workbox использует
 // для runtime-кэша HTTP-ответов.
-const idb = localforage.createInstance({
+export const idb = localforage.createInstance({
   name: 'pwa-test',
   storeName: 'pinia',
   description: 'Pinia persisted state (IndexedDB)',
 });
 
 /**
- * Список ключей, которые мы предзагружаем из IDB на старте приложения.
- * Должен совпадать с `persist.key` каждого стора.
+ * Группы persisted-ключей для предзагрузки из IDB на старте приложения.
+ * Должны совпадать с `persist.key` соответствующих стораджей.
  *
- * При добавлении нового ресурса через `defineResourceStore` достаточно
- * дописать сюда его `name` и ключ очереди синхронизации оставить как есть.
+ * - `infrastructure`: низкоуровневые технические сторы
+ * - `resources`: прикладные ресурсные сторы (например, todos)
  */
-export const PERSISTED_KEYS = ['sync-queue', 'todos'] as const;
+export const PERSISTED_KEYS = {
+  infrastructure: ['sync-queue'],
+  resources: ['todos'],
+} as const;
 
-const cache = new Map<string, string | null>();
-
-/**
- * Заранее читает все persisted-ключи из IDB в синхронный кэш.
- * Должен быть вызван до createApp().mount(), чтобы плагин persistedstate
- * (у которого синхронный getItem) увидел значения и гидрировал стор.
- */
-export async function preloadPersistedState() {
-  await Promise.all(
-    PERSISTED_KEYS.map(async (key) => {
-      const raw = await idb.getItem<string>(key);
-      cache.set(key, raw ?? null);
-    }),
-  );
-}
+export const cache = new Map<string, string | null>();
 
 /**
  * Sync-адаптер под StorageLike pinia-plugin-persistedstate:

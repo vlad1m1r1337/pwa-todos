@@ -2,15 +2,14 @@ import { defineStore } from 'pinia';
 import { ref, computed, type Ref } from 'vue';
 import { idbStorage } from '@/shared/lib/storage';
 import { registerResource, useSyncQueueStore } from './sync-queue';
+import { isTempId, makeTempId } from './utils';
 import {
-  isTempId,
-  makeTempId,
   type ResourceAdapter,
   type ResourceApi,
   type ResourceId,
 } from './types';
 
-interface ResourceStoreOptions<T extends { id: ResourceId }, C, U> {
+interface CreateResourceStoreOptions<T extends { id: ResourceId }, C, U> {
   /** Имя стора и ключа в реестре/persist. Должно быть уникальным. */
   name: string;
   api: ResourceApi<T, C, U>;
@@ -33,15 +32,15 @@ interface ResourceStoreOptions<T extends { id: ResourceId }, C, U> {
  *
  * Пример:
  * ```ts
- * export const useTodosStore = defineResourceStore<LocalTodo, TodoCreate, TodoUpdate>({
+ * export const useTodosStore = createResourceStore<LocalTodo, TodoCreate, TodoUpdate>({
  *   name: 'todos',
  *   api: todosApi,
  *   makeOptimistic: (p, id) => ({ id, ...p }),
  * })
  * ```
  */
-export function defineResourceStore<T extends { id: ResourceId }, C, U>(
-  options: ResourceStoreOptions<T, C, U>,
+export function createResourceStore<T extends { id: ResourceId }, C, U>(
+  options: CreateResourceStoreOptions<T, C, U>,
 ) {
   const { name, api, makeOptimistic } = options;
 
@@ -154,3 +153,6 @@ export function defineResourceStore<T extends { id: ResourceId }, C, U>(
 
   return useStore;
 }
+
+// Backward-compatible alias with Pinia-like naming.
+export const defineResourceStore = createResourceStore;
