@@ -2,7 +2,11 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { idbStorage } from '@/shared/lib/storage';
 import { formatError, isNetworkError } from './utils';
-import type { PendingOp, ResourceAdapter, ResourceId } from './types';
+import type {
+  PendingOp,
+  ResourceAdapter,
+  ResourceId,
+} from '../storeFabric/types';
 
 /**
  * Глобальный реестр ресурсов. Ключ — имя ресурса (совпадает с `resource`

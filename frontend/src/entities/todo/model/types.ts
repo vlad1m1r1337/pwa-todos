@@ -1,4 +1,4 @@
-import type { ResourceId } from '@/shared/lib/offline';
+import type { ResourceId } from '@/shared/lib/storeFabric';
 
 export type Todo = {
   id: number;

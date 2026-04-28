@@ -1,5 +1,5 @@
 import { api } from '@/shared/api';
-import type { ResourceApi, ResourceId } from '@/shared/lib/offline';
+import type { ResourceApi, ResourceId } from '@/shared/lib/storeFabric';
 import type { Todo, TodoCreate, TodoUpdate } from '../model/types';
 
 export const todosApi: ResourceApi<Todo, TodoCreate, TodoUpdate> = {

@@ -1,4 +1,7 @@
-import { registerResource, useSyncQueueStore } from './sync-queue';
+import {
+  registerResource,
+  useSyncQueueStore,
+} from '../apiSyncQueue/sync-queue';
 import { isIdExists, isTempId, makeTempId } from './utils';
 import type { LocalResourceStore } from './local-resource-store';
 import type {
