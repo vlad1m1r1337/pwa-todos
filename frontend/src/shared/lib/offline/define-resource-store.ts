@@ -1,16 +1,11 @@
-import { defineStore } from 'pinia';
-import { ref, computed, type Ref } from 'vue';
-import { idbStorage } from '@/shared/lib/storage';
-import { registerResource, useSyncQueueStore } from './sync-queue';
-import { isTempId, makeTempId } from './utils';
-import {
-  type ResourceAdapter,
-  type ResourceApi,
-  type ResourceId,
-} from './types';
+import { storeToRefs } from 'pinia';
+import { type ComputedRef, type Ref } from 'vue';
+import { createLocalResourceStore } from './local-resource-store';
+import { ResourceSyncController } from './resource-sync-controller';
+import type { ResourceApi, ResourceId } from './types';
 
 interface CreateResourceStoreOptions<T extends { id: ResourceId }, C, U> {
-  /** Имя стора и ключа в реестре/persist. Должно быть уникальным. */
+  /** Имя ресурса. Используется как Pinia store id и persist key. */
   name: string;
   api: ResourceApi<T, C, U>;
   /**
@@ -21,14 +16,31 @@ interface CreateResourceStoreOptions<T extends { id: ResourceId }, C, U> {
 }
 
 /**
- * Фабрика сторов ресурсов поверх единой sync-инфраструктуры.
+ * Публичный интерфейс ресурсного стора, видимый компонентам.
+ * Состояние отдаётся как реактивные refs, действия — как обычные методы.
+ */
+export interface ResourceStore<T extends { id: ResourceId }, C, U> {
+  items: Ref<T[]>;
+  loading: Ref<boolean>;
+  count: ComputedRef<number>;
+  fetchAll: () => Promise<void>;
+  addItem: (payload: C) => void;
+  updateItem: (id: ResourceId, patch: U) => void;
+  removeItem: (id: ResourceId) => void;
+}
+
+/**
+ * Фабрика ресурсных сторов.
  *
- * Ресурсный стор отвечает только за:
- *  — локальные `items` (плюс loading),
- *  — их persist в IndexedDB,
- *  — трансляцию пользовательских действий в очередь `sync-queue`.
+ * Склеивает две независимые половинки:
+ *  — `createLocalResourceStore` — чистый Pinia-стор с локальным состоянием
+ *    и нейтральными мутаторами;
+ *  — `ResourceSyncController` — класс, владеющий очередью синхронизации
+ *    и адаптером для `sync-queue`.
  *
- * Всё про сеть/очередь/online/offline живёт в `useSyncQueueStore`.
+ * Адаптер регистрируется сразу при импорте модуля, чтобы `flush()` на
+ * старте приложения мог обработать persisted-операции до первого
+ * обращения к стору из компонента.
  *
  * Пример:
  * ```ts
@@ -41,118 +53,31 @@ interface CreateResourceStoreOptions<T extends { id: ResourceId }, C, U> {
  */
 export function createResourceStore<T extends { id: ResourceId }, C, U>(
   options: CreateResourceStoreOptions<T, C, U>,
-) {
-  const { name, api, makeOptimistic } = options;
+): () => ResourceStore<T, C, U> {
+  const useLocalStore = createLocalResourceStore<T>(options.name);
 
-  const useStore = defineStore(
-    name,
-    () => {
-      const items = ref<T[]>([]) as Ref<T[]>;
-      const loading = ref(false);
-      const count = computed(() => items.value.length);
+  const controller = new ResourceSyncController<T, C, U>({
+    name: options.name,
+    api: options.api,
+    makeOptimistic: options.makeOptimistic,
+    getLocalStore: () => useLocalStore(),
+  });
+  controller.register();
 
-      const queue = useSyncQueueStore();
+  return function useResourceStore(): ResourceStore<T, C, U> {
+    const local = useLocalStore();
+    const { items, loading, count } = storeToRefs(local);
 
-      async function fetchAll(): Promise<void> {
-        loading.value = true;
-        try {
-          const data = await api.list();
-          // Сохраняем оптимистичные элементы, которые ещё не долетели до сервера.
-          const pending = items.value.filter((t) => isTempId(t.id));
-          items.value = [...data, ...pending];
-        } catch (e) {
-          queue.reportError(e);
-        } finally {
-          loading.value = false;
-        }
-      }
-
-      function addItem(payload: C): void {
-        const tempId = makeTempId();
-        items.value.push(makeOptimistic(payload, tempId));
-        queue.enqueue({
-          id: crypto.randomUUID(),
-          resource: name,
-          kind: 'create',
-          tempId,
-          payload,
-        });
-      }
-
-      function updateItem(id: ResourceId, patch: U): void {
-        const item = items.value.find((t) => t.id === id);
-        if (!item) return;
-        Object.assign(item, patch);
-        queue.enqueue({
-          id: crypto.randomUUID(),
-          resource: name,
-          kind: 'update',
-          targetId: id,
-          payload: patch,
-        });
-      }
-
-      function removeItem(id: ResourceId): void {
-        const i = items.value.findIndex((t) => t.id === id);
-        if (i === -1) return;
-        items.value.splice(i, 1);
-        queue.enqueue({
-          id: crypto.randomUUID(),
-          resource: name,
-          kind: 'delete',
-          targetId: id,
-        });
-      }
-
-      return {
-        items,
-        loading,
-        count,
-        fetchAll,
-        addItem,
-        updateItem,
-        removeItem,
-      };
-    },
-    {
-      persist: {
-        key: name,
-        storage: idbStorage,
-        pick: ['items'],
-      },
-    },
-  );
-
-  // Регистрируем адаптер сразу при импорте модуля. Сам стор инстанцируется
-  // лениво внутри колбэков — к моменту их вызова Pinia уже установлена.
-  const adapter: ResourceAdapter<T, C, U> = {
-    name,
-    api,
-    onSynced(event) {
-      const store = useStore();
-      if (event.kind === 'create') {
-        const idx = store.items.findIndex((t) => t.id === event.tempId);
-        if (idx !== -1) store.items[idx] = event.item;
-      } else if (event.kind === 'update') {
-        const idx = store.items.findIndex((t) => t.id === event.targetId);
-        if (idx !== -1) store.items[idx] = event.item;
-      }
-    },
-    onRollback(op) {
-      // Откатываем оптимистичное создание, если сервер его отверг
-      // (dependent updates/deletes до такого момента не доживают).
-      if (op.kind === 'create') {
-        const store = useStore();
-        const idx = store.items.findIndex((t) => t.id === op.tempId);
-        if (idx !== -1) store.items.splice(idx, 1);
-      }
-    },
-    refetch: () => useStore().fetchAll(),
+    return {
+      items: items as Ref<T[]>,
+      loading,
+      count,
+      fetchAll: () => controller.fetchAll(),
+      addItem: (payload) => controller.addItem(payload),
+      updateItem: (id, patch) => controller.updateItem(id, patch),
+      removeItem: (id) => controller.removeItem(id),
+    };
   };
-  registerResource(adapter as unknown as ResourceAdapter);
-
-  return useStore;
 }
 
-// Backward-compatible alias with Pinia-like naming.
 export const defineResourceStore = createResourceStore;
