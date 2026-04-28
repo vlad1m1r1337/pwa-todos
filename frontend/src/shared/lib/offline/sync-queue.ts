@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { idbStorage } from '@/shared/lib/storage';
-import { formatError, isNetworkError } from './network';
+import { formatError, isNetworkError } from './utils';
 import type { PendingOp, ResourceAdapter, ResourceId } from './types';
 
 /**
  * Глобальный реестр ресурсов. Ключ — имя ресурса (совпадает с `resource`
  * в `PendingOp`). Адаптер регистрируется один раз при импорте соответствующего
- * стора (см. `defineResourceStore`).
+ * стора (см. `createResourceStore`).
  */
 const adapters = new Map<string, ResourceAdapter>();
 
@@ -20,7 +20,7 @@ export function registerResource(adapter: ResourceAdapter): void {
  * общий статус online/offline и единый канал пользовательских ошибок.
  *
  * Добавление нового ресурса не требует ничего менять здесь —
- * достаточно зарегистрировать адаптер через `defineResourceStore`.
+ * достаточно зарегистрировать адаптер через `createResourceStore`.
  */
 export const useSyncQueueStore = defineStore(
   'sync-queue',
