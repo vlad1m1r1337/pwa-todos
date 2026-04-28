@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useTodosStore, TodoCard } from '@/entities/todo';
 import { ToggleTodoCheckbox } from '@/features/toggle-todo';
 import { DeleteTodoButton } from '@/features/delete-todo';
 import { EditTodoForm } from '@/features/edit-todo';
 
-const store = useTodosStore();
-const { items, loading } = storeToRefs(store);
+const { items, loading } = useTodosStore();
 
 const editingId = ref<number | string | null>(null);
 

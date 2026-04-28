@@ -1,4 +1,4 @@
-import { createResourceStore } from '@/shared/lib/offline';
+import { createResourceStore } from '@/shared/lib/storeFabric';
 import { todosApi } from '../api/todos.api';
 import type { LocalTodo, TodoCreate, TodoUpdate } from './types';
 
