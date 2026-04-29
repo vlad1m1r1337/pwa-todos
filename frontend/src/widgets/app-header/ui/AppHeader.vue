@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useSyncQueueStore } from '@/shared/lib/storeFabric';
+import { useSyncQueueStore } from '@/shared/lib/apiSyncQueue/sync-queue';
 
 const sync = useSyncQueueStore();
 const { isOnline, pendingCount } = storeToRefs(sync);

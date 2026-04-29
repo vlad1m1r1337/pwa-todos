@@ -3,7 +3,7 @@ import App from './App.vue';
 import { createAppPinia } from '@/app/providers/pinia';
 import '@/app/styles/index.css';
 import { preloadPersistedState } from '@/shared/lib/storage/preloadPersistedState';
-import { useSyncQueueStore } from '@/shared/lib/storeFabric';
+import { useSyncQueueStore } from '@/shared/lib/apiSyncQueue/sync-queue';
 // Импорты сторов ресурсов нужны, чтобы сработала регистрация их адаптеров
 // в реестре sync-queue до вызова init().
 import '@/entities/todo';

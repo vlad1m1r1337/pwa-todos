@@ -81,16 +81,3 @@ export function createResourceStore<T extends { id: ResourceId }, C, U>(
 }
 
 export const defineResourceStore = createResourceStore;
-
-export {
-  useSyncQueueStore,
-  registerResource,
-} from '../apiSyncQueue/sync-queue';
-export { isTempId, makeTempId } from './utils';
-export {
-  type ResourceId,
-  type ResourceApi,
-  type ResourceAdapter,
-  type PendingOp,
-  type SyncEvent,
-} from './types';

@@ -75,6 +75,7 @@ export class ResourceSyncController<T extends { id: ResourceId }, C, U> {
   addItem(payload: C): void {
     const tempId = makeTempId();
     this.local.append(this.options.makeOptimistic(payload, tempId));
+
     this.queue.enqueue({
       id: crypto.randomUUID(),
       resource: this.options.name,
@@ -87,6 +88,7 @@ export class ResourceSyncController<T extends { id: ResourceId }, C, U> {
   updateItem(id: ResourceId, patch: U): void {
     if (!isIdExists(id, this.local.items)) return;
     this.local.patchById(id, patch as unknown as Partial<T>);
+
     this.queue.enqueue({
       id: crypto.randomUUID(),
       resource: this.options.name,
@@ -99,6 +101,7 @@ export class ResourceSyncController<T extends { id: ResourceId }, C, U> {
   removeItem(id: ResourceId): void {
     if (!isIdExists(id, this.local.items)) return;
     this.local.removeById(id);
+
     this.queue.enqueue({
       id: crypto.randomUUID(),
       resource: this.options.name,
